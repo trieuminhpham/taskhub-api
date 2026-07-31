@@ -44,7 +44,7 @@ async def update_task(
     task = await task_repo.get(db, id=task_id)
     if not task:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
-    
+
     task = await task_repo.update(db, db_obj=task, obj_in=task_in)
     return task
 

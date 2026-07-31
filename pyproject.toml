@@ -19,6 +19,7 @@ select = [
     "B",    # flake8-bugbear
     "SIM",  # flake8-simplify
 ]
+extend-ignore = ["B008"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]

@@ -4,7 +4,7 @@ from enum import StrEnum
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class TaskStatus(str, StrEnum):
+class TaskStatus(StrEnum):
     """Task status enum."""
 
     TODO = "TODO"
@@ -13,7 +13,7 @@ class TaskStatus(str, StrEnum):
     DONE = "DONE"
 
 
-class TaskPriority(str, StrEnum):
+class TaskPriority(StrEnum):
     """Task priority enum."""
 
     LOW = "LOW"

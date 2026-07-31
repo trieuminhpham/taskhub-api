@@ -34,4 +34,11 @@ class Settings(BaseSettings):
         return f"redis://{self.redis_host}:{self.redis_port}/0"
 
 
+    # JWT Settings
+    secret_key: str = "super-secret-key-change-this-in-production"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 7
+
+
 settings = Settings()

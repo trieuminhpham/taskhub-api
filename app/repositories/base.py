@@ -35,7 +35,7 @@ class BaseRepository(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         obj_data = obj_in.model_dump(exclude_unset=True)
         for field, value in obj_data.items():
             setattr(db_obj, field, value)
-        
+
         db.add(db_obj)
         await db.commit()
         await db.refresh(db_obj)

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -32,6 +32,8 @@ class TaskCreate(BaseModel):
     description: str | None = Field(None, max_length=1000)
     status: TaskStatus = TaskStatus.TODO
     priority: TaskPriority = TaskPriority.MEDIUM
+    assignee_id: int | None = None
+    due_date: date | None = None
 
 
 class TaskUpdate(BaseModel):
@@ -41,6 +43,8 @@ class TaskUpdate(BaseModel):
     description: str | None = Field(None, max_length=1000)
     status: TaskStatus | None = None
     priority: TaskPriority | None = None
+    assignee_id: int | None = None
+    due_date: date | None = None
 
 
 # --- Response Schemas ---
@@ -52,8 +56,11 @@ class TaskResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    project_id: int | None = None
+    assignee_id: int | None = None
     title: str
     description: str | None = None
     status: TaskStatus
     priority: TaskPriority
+    due_date: date | None = None
     created_at: datetime

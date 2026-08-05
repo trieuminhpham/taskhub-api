@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.core.config import settings
-from app.routers import auth, projects, tasks, users, workspaces
+from app.routers import auth, comments, labels, projects, tasks, users, workspaces
 
 
 @asynccontextmanager
@@ -30,6 +30,8 @@ app.include_router(users.router)
 app.include_router(tasks.router)
 app.include_router(workspaces.router)
 app.include_router(projects.router)
+app.include_router(comments.router)
+app.include_router(labels.router)
 
 @app.get("/health", tags=["Health"])
 async def health_check() -> dict[str, str]:

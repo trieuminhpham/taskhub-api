@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -15,11 +15,22 @@ router = APIRouter(prefix="/api/v1/workspaces/{workspace_id}/projects", tags=["P
 @router.get("/", response_model=list[ProjectResponse])
 async def list_projects(
     workspace_id: int,
+    status: str | None = Query(default=None),
+    search: str | None = Query(default=None),
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
     member: WorkspaceMember = Depends(get_workspace_member),
 ) -> list[ProjectResponse]:
-    """Lấy danh sách project trong workspace. Yêu cầu là thành viên."""
-    return await project_repo.get_by_workspace(db, workspace_id=workspace_id)
+    """Lấy danh sách project. Hỗ trợ filter theo status, tìm kiếm theo tên và phân trang."""
+    return await project_repo.get_filtered(
+        db,
+        workspace_id=workspace_id,
+        status=status,
+        search=search,
+        skip=skip,
+        limit=limit,
+    )
 
 
 @router.post("/", response_model=ProjectResponse, status_code=status.HTTP_201_CREATED)
@@ -86,13 +97,26 @@ async def delete_project(
 async def list_tasks(
     workspace_id: int,
     project_id: int,
-    skip: int = 0,
-    limit: int = 100,
+    status: str | None = Query(default=None),
+    priority: str | None = Query(default=None),
+    assignee_id: int | None = Query(default=None),
+    search: str | None = Query(default=None),
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
     member: WorkspaceMember = Depends(get_workspace_member),
 ) -> list[TaskResponse]:
-    """Lấy danh sách task trong project."""
-    return await task_repo.get_by_project(db, project_id=project_id, skip=skip, limit=limit)
+    """Lấy danh sách task. Hỗ trợ filter theo status, priority, assignee, tìm kiếm và phân trang."""
+    return await task_repo.get_filtered(
+        db,
+        project_id=project_id,
+        status=status,
+        priority=priority,
+        assignee_id=assignee_id,
+        search=search,
+        skip=skip,
+        limit=limit,
+    )
 
 
 @router.post("/{project_id}/tasks", response_model=TaskResponse, status_code=status.HTTP_201_CREATED)
